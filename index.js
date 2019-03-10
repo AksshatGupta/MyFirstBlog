@@ -1,10 +1,14 @@
-const express = require('express')
-const app = express()
-const path = require('path')
-const port = 3000
+const express = require('express');
 
-app.get('/', (req, res) => res.sendFile(path.join(__dirname + '/dist/index.html')))
+const app = express();
+const path = require('path');
 
-app.listen(port, () => console.log(`Example app listening on port ${port}!`))
+const port = 3000;
 
-app.use('/static', express.static(path.join(__dirname, 'dist')))
+app.get('/', (req, res) => res.sendFile(path.join(`${__dirname}/dist/index.html`)));
+
+/*eslint-disable*/
+app.listen(port, () => console.log(`Example app listening on port ${port}!`));
+/* eslint-enable */
+
+app.use('/static', express.static(path.join(__dirname, 'dist')));
