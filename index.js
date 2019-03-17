@@ -27,8 +27,8 @@ app.get('/blog', (req, res) => res.render('blog', {
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));
 /* eslint-enable */
 
-//app.use('/static', express.static(path.join(__dirname, 'dist')));
-app.use(express.static(__dirname + "/dist"));
+// app.use('/static', express.static(path.join(__dirname, 'dist')));
+app.use(express.static(`${__dirname}/dist`));
 
 app.engine('hbs', hbs.express4({
   partialsDir: [relative('views/partials')],
