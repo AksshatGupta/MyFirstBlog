@@ -13,21 +13,29 @@ const port = 3000;
 app.get('/', (req, res) => res.render('index', {
   title: 'home',
   homePage: 'This is the home page',
+  activeHome: true
 }));
 
 app.get('/about', (req, res) => res.render('about', {
   title: 'about',
+  activeHome: true
 }));
 
 app.get('/blog', (req, res) => res.render('blog', {
   title: 'blog',
+  activeHome: true
 }));
 
 /*eslint-disable*/
-app.listen(port, () => console.log(`Example app listening on port ${port}!`));
+app.listen(port, () => {
+  console.log(`Example app listening on port ${port}!`)
+  if(process.send) {
+    process.send("online");
+  }
+});
 /* eslint-enable */
 
-// app.use('/static', express.static(path.join(__dirname, 'dist')));
+//app.use('/static', express.static(path.join(__dirname, 'dist')));
 app.use(express.static(`${__dirname}/dist`));
 
 app.engine('hbs', hbs.express4({
