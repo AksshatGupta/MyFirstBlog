@@ -6,6 +6,7 @@
   "author": "AksshatGupta <aksshatyashgupta@gmail.com>",
   "license": "MIT",
   "dependencies": {
+    "body-parser": "^1.18.3",
     "bootstrap": "^4.3.1",
     "express": "^4.16.4",
     "express-hbs": "^2.0.2"
