@@ -1,6 +1,6 @@
 const express = require('express');
 const hbs = require('express-hbs');
-var helpers = require('handlebars-helpers')();
+// const helpers = require('handlebars-helpers')();
 
 const app = express();
 const path = require('path');
@@ -61,10 +61,10 @@ app.get('/about', (req, res) => res.render('about', {
 app.get('/blog', (req, res) => {
   Post.find((err, posts) => {
     res.render('blog', {
-        post: posts,
-        activeBlog: true
-    })
-  })
+      post: posts,
+      activeBlog: true,
+    });
+  });
 });
 
 app.get('/admin', (req, res) => res.render('admin', {
@@ -84,15 +84,15 @@ app.post('/blog/create', (req, res) => {
   const { permalink } = req.body;
 
   const post = new Post({
-    headline: headline,
+    headline,
     subHeadline: subheadline,
-    body: body,
-    permalink: permalink
-  })
+    body,
+    permalink,
+  });
 
-  post.save(function (err, post) {
+  post.save((err, post) => {
     if (err) return console.error(err);
-    console.log(post.headline + " saved to posts collection.");
+    console.log(`${post.headline} saved to posts collection.`);
   });
 
   res.end('Yes');

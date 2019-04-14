@@ -1,25 +1,26 @@
-var moment = require('moment');
-var mongoose = require('mongoose'),
-Schema = mongoose.Schema;
+const moment = require('moment');
+const mongoose = require('mongoose');
+
+const { Schema } = mongoose;
 
 mongoose.connect('mongodb://localhost/MyBlog');
 
-var postSchema = new Schema ({
+const postSchema = new Schema({
   headline: String,
   subHeadline: String,
   body: String,
   permalink: {
     type: String,
-    unique: true
+    unique: true,
   },
   createdAt: {
     type: Date,
-    default: moment().valueOf()
+    default: moment().valueOf(),
   },
   updatedAt: {
     type: Date,
-    default: moment().valueOf()
-  }
-})
+    default: moment().valueOf(),
+  },
+});
 
 module.exports = mongoose.model('Post', postSchema);
