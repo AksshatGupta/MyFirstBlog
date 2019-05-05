@@ -5,6 +5,9 @@
   </head>
   <body class="d-flex flex-column">
     {{> navbar activeHome=activeHome activeBlog=activeBlog activeAbout=activeAbout activeAdmin=activeAdmin}}
+    {{#if flashMessage}}
+      <div class="alert alert-{{flashMessage.type}}">{{flashMessage.message}}</div>
+    {{/if}}
     <section class="container-fluid flex-grow-1">
       {{{body}}}
     </section>

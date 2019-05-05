@@ -1,11 +1,16 @@
 const express = require('express');
 const hbs = require('express-hbs');
+const flash = require('connect-flash');
+const session = require('express-session');
 // const helpers = require('handlebars-helpers')();
 
 const app = express();
 const path = require('path');
 
+const sessionStore = new session.MemoryStore();
+
 const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
 
 const Post = require('./models/db.js');
 
@@ -31,12 +36,6 @@ hbs.registerHelper('activeLink', (isActive) => {
 
 const port = 3000;
 
-app.use(bodyParser.json()); // support json encoded bodies
-app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
-
-// app.use('/static', express.static(path.join(__dirname, 'dist')));
-app.use(express.static(`${__dirname}/dist`));
-
 app.engine('hbs', hbs.express4({
   partialsDir: [relative('views/partials')],
   layoutsDir: relative('views/layouts'),
@@ -46,6 +45,26 @@ app.engine('hbs', hbs.express4({
 app.set('view engine', 'hbs');
 app.set('views', `${__dirname}/views`);
 
+app.use(bodyParser.json()); // support json encoded bodies
+app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
+
+// app.use('/static', express.static(path.join(__dirname, 'dist')));
+app.use(express.static(`${__dirname}/dist`));
+
+app.use(cookieParser('keyboard cat'));
+app.use(session({
+  secret: 'keyboard cat',
+  resave: 'true',
+  saveUninitialized: true,
+  cookie: { maxAge: 60000 },
+  store: sessionStore,
+}));
+app.use(flash());
+app.use((req, res, next) => {
+  res.locals.flashMessage = req.session.flashMessage;
+  delete req.session.flashMessage;
+  next();
+});
 
 app.get('/', (req, res) => res.render('index', {
   title: 'home',
@@ -63,6 +82,8 @@ app.get('/blog', (req, res) => {
     res.render('blog', {
       post: posts,
       activeBlog: true,
+      flashMessage: res.locals.flashMessage,
+      layout: 'main',
     });
   });
 });
@@ -91,11 +112,20 @@ app.post('/blog/create', (req, res) => {
   });
 
   post.save((err, post) => {
-    if (err) return console.error(err);
-    console.log(`${post.headline} saved to posts collection.`);
-  });
+    if (err) {
+      req.session.flashMessage = {
+        type: 'danger',
+        message: 'Post Not Created.',
+      };
+    } else {
+      req.session.flashMessage = {
+        type: 'success',
+        message: 'Post Created Successfully.',
+      };
+    }
 
-  res.end('Yes');
+    res.redirect('/blog');
+  });
 });
 
 /*eslint-disable*/
