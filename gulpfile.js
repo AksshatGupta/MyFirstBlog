@@ -1,4 +1,3 @@
-const path = require('path');
 const sass = require('gulp-sass');
 const gulp = require('gulp');
 

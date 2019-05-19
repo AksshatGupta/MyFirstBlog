@@ -6,14 +6,12 @@ const router = express.Router();
 const ROUTE_NAME = 'blog';
 
 router.get(`/${ROUTE_NAME}`, (req, res) => {
-  Post.find((err, posts) => {
-    res.render('blog', {
-      post: posts,
-      activeBlog: true,
-      flashMessage: res.locals.flashMessage,
-      layout: 'main',
-    });
-  });
+  Post.find((err, posts) => res.render('blog', {
+    post: posts,
+    activeBlog: true,
+    flashMessage: res.locals.flashMessage,
+    layout: 'main',
+  }));
 });
 
 router.get(`/${ROUTE_NAME}/new`, (req, res) => res.render('newPost', {
@@ -51,7 +49,8 @@ router.post(`/${ROUTE_NAME}/create`, (req, res) => {
     permalink,
   });
 
-  post.save((err, post) => {
+  // eslint-disable-next-line no-unused-vars
+  post.save((err, savedPost) => {
     if (err) {
       req.session.flashMessage = {
         type: 'danger',
