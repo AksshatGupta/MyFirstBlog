@@ -12,27 +12,12 @@ const sessionStore = new session.MemoryStore();
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 
-const Post = require('./models/db.js');
+const hbsHelpers = require('./helpers/helpers.js');
+const postController = require('./controllers/post.js');
 
 function relative(fp) {
   return path.join(__dirname, fp);
 }
-// TODO: Move this to helpers
-hbs.registerHelper('activeRoute', (isActive) => {
-  if (isActive) {
-    return new hbs.SafeString(
-      '<span>&#8226;</span>',
-    );
-  }
-});
-
-hbs.registerHelper('activeLink', (isActive) => {
-  if (isActive) {
-    return new hbs.SafeString(
-      'active',
-    );
-  }
-});
 
 const port = 3000;
 
@@ -40,6 +25,7 @@ app.engine('hbs', hbs.express4({
   partialsDir: [relative('views/partials')],
   layoutsDir: relative('views/layouts'),
   defaultLayout: relative('views/layouts/main.hbs'),
+  helpers: hbsHelpers,
 }));
 
 app.set('view engine', 'hbs');
@@ -66,6 +52,8 @@ app.use((req, res, next) => {
   next();
 });
 
+app.use(postController);
+
 app.get('/', (req, res) => res.render('index', {
   title: 'home',
   homePage: 'This is the home page',
@@ -77,56 +65,12 @@ app.get('/about', (req, res) => res.render('about', {
   activeAbout: true,
 }));
 
-app.get('/blog', (req, res) => {
-  Post.find((err, posts) => {
-    res.render('blog', {
-      post: posts,
-      activeBlog: true,
-      flashMessage: res.locals.flashMessage,
-      layout: 'main',
-    });
-  });
-});
-
 app.get('/admin', (req, res) => res.render('admin', {
   title: 'admin',
   activeAdmin: true,
 }));
 
-app.get('/blog/new', (req, res) => res.render('newPost', {
-  title: 'new',
-  activeBlog: true,
-}));
-
-app.post('/blog/create', (req, res) => {
-  const { headline } = req.body;
-  const { subheadline } = req.body;
-  const body = req.body.post_body;
-  const { permalink } = req.body;
-
-  const post = new Post({
-    headline,
-    subHeadline: subheadline,
-    body,
-    permalink,
-  });
-
-  post.save((err, post) => {
-    if (err) {
-      req.session.flashMessage = {
-        type: 'danger',
-        message: 'Post Not Created.',
-      };
-    } else {
-      req.session.flashMessage = {
-        type: 'success',
-        message: 'Post Created Successfully.',
-      };
-    }
-
-    res.redirect('/blog');
-  });
-});
+app.get(['*', '404'], (req, res) => res.status(404).end('Page Not Found'));
 
 /*eslint-disable*/
 app.listen(port, () => {

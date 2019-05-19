@@ -1,5 +1,9 @@
-<p> My Blog </p>
+<h1> My Blog </h1>
+<hr>
 {{#each post}}
-  <p>{{this.headline}}</p>
+  <h4>{{this.headline}}</h4>
+  <p>{{prettyDate this.createdAt}}</p>
+  <a href="/blog/{{this.permalink}}">View</a>
+  <hr>  
 {{/each}}
-<a href="/blog/new">Create a new Post</a>
+<a class="btn-primary btn" href="/blog/new">Create a new Post</a>
