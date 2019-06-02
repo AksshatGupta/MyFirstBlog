@@ -7,19 +7,27 @@ const session = require('express-session');
 const app = express();
 const path = require('path');
 
+const passport = require('passport');
+const LocalStrategy = require('passport-local').Strategy;
+
 const sessionStore = new session.MemoryStore();
 
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 
 const hbsHelpers = require('./helpers/helpers.js');
-const postController = require('./controllers/post.js');
+const { postController, userController } = require('./controllers');
+const { User } = require('./models');
 
 function relative(fp) {
   return path.join(__dirname, fp);
 }
 
 const port = 3000;
+
+passport.use(new LocalStrategy(User.authenticate()));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
 
 app.engine('hbs', hbs.express4({
   partialsDir: [relative('views/partials')],
@@ -52,22 +60,23 @@ app.use((req, res, next) => {
   next();
 });
 
+app.use(passport.initialize());
+app.use(passport.session());
+
 app.use(postController);
+app.use(userController);
 
 app.get('/', (req, res) => res.render('index', {
   title: 'home',
   homePage: 'This is the home page',
   activeHome: true,
+  user: req.user,
 }));
 
 app.get('/about', (req, res) => res.render('about', {
   title: 'about',
   activeAbout: true,
-}));
-
-app.get('/admin', (req, res) => res.render('admin', {
-  title: 'admin',
-  activeAdmin: true,
+  user: req.user,
 }));
 
 app.get(['*', '404'], (req, res) => res.status(404).end('Page Not Found'));

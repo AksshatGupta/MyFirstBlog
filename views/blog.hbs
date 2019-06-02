@@ -6,4 +6,7 @@
   <a href="/blog/{{this.permalink}}">View</a>
   <hr>  
 {{/each}}
-<a class="btn-primary btn" href="/blog/new">Create a new Post</a>
+{{isAdmin}}
+{{#if isAdmin}}
+  <a class="btn-primary btn" href="/blog/new">Create a new Post</a>
+{{/if}}

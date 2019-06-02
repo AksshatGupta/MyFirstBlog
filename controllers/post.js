@@ -1,6 +1,6 @@
 const express = require('express');
 
-const Post = require('../models/db.js');
+const { Post } = require('../models');
 
 const router = express.Router();
 const ROUTE_NAME = 'blog';
@@ -8,16 +8,22 @@ const ROUTE_NAME = 'blog';
 router.get(`/${ROUTE_NAME}`, (req, res) => {
   Post.find((err, posts) => res.render('blog', {
     post: posts,
+    isAdmin: req.user && req.user.admin.toString(),
+    user: req.user,
     activeBlog: true,
     flashMessage: res.locals.flashMessage,
     layout: 'main',
   }));
 });
 
-router.get(`/${ROUTE_NAME}/new`, (req, res) => res.render('newPost', {
-  title: 'new',
-  activeBlog: true,
-}));
+router.get(`/${ROUTE_NAME}/new`, (req, res) => {
+  // if (!req.user.admin) res.redirect('/404');
+  res.render('newPost', {
+    title: 'new',
+    user: req.user,
+    activeBlog: true,
+  });
+});
 
 router.get(`/${ROUTE_NAME}/:permalink`, (req, res) => {
   const { permalink } = req.params;
@@ -31,12 +37,14 @@ router.get(`/${ROUTE_NAME}/:permalink`, (req, res) => {
       subHeadline,
       createdAt,
       body,
+      user: req.user,
       activeBlog: true,
     });
   });
 });
 
 router.post(`/${ROUTE_NAME}/create`, (req, res) => {
+  // if (!req.user.admin) res.redirect('/404');
   const { headline } = req.body;
   const { subheadline } = req.body;
   const body = req.body.post_body;

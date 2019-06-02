@@ -4,7 +4,7 @@
     <link rel="stylesheet" href="/css/styles.css" type="text/css">
   </head>
   <body class="d-flex flex-column">
-    {{> navbar activeHome=activeHome activeBlog=activeBlog activeAbout=activeAbout activeAdmin=activeAdmin}}
+    {{> navbar activeHome=activeHome activeBlog=activeBlog activeAbout=activeAbout}}
     {{#if flashMessage}}
       <div class="alert alert-{{flashMessage.type}}">{{flashMessage.message}}</div>
     {{/if}}

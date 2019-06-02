@@ -14,9 +14,22 @@
       <li class="nav-item {{{activeLink activeBlog}}}">
         <a class="nav-link" href="/blog">Blog {{{activeRoute activeBlog}}}</a>
       </li>
-      <li class="nav-item {{{activeLink activeAdmin}}}">
-        <a class="nav-link" href="/admin">Admin {{{activeRoute activeAdmin}}}</a>
-      </li>
+      {{#unless user}}
+        <li class="nav-item">
+          <a class="nav-link" href="/register">Register</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/login">Login</a>
+        </li>
+      {{/unless}}
+      {{#if user}}
+        <li class="nav-item">
+          <span class="nav-link">{{{user.username}}}</span>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/logout">Logout</a>
+        </li>
+      {{/if}}
     </ul>
   </div>
 </nav>
