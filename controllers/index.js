@@ -4,4 +4,3 @@ module.exports = {
     postController: require('./post'),
     userController: require('./user'),
 }
-/* eslint-enable */
