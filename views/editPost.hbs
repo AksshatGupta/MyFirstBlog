@@ -1,0 +1,30 @@
+<div class="row">
+  <div class="col-sm-12">
+    <h2>Updating {{headline}}</h2>
+  </div>
+  <div class="col-sm-12">
+    <form action="/blog/update/{{id}}" method="post">
+      <div class="form-group">
+        <label for="headline-input"></label>
+        <input type="text" class="form-control" id="headline-input" placeholder="Enter a Headline" name="headline" value={{headline}}>
+      </div>
+      <div class="form-group">
+        <label for="sub-headline-input"></label>
+        <input type="text" class="form-control" id="sub-headline-input" placeholder="Enter a Sub-headline" name="subheadline" value={{subHeadline}}>
+      </div>
+      <div class="form-group">
+        <label for="author-input"></label>
+        <input type="text" class="form-control" id="author-input" placeholder="Author" name="author" value={{author}}>
+      </div>
+      <div class="form-group">
+        <label for="body-input"></label>
+        <textarea class="form-control" id="body-input" rows="6" name="post_body">{{postBody}}</textarea>
+      </div>
+      <div class="form-group">
+        <label for="permalink-input"></label>
+        <input type="text" class="form-control" id="permalink-input" placeholder="Enter a Permalink" name="permalink" value={{permalink}}>
+      </div>
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+  </div>
+</div>

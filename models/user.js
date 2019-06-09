@@ -7,6 +7,7 @@ const { Schema } = mongoose;
 const userSchema = new Schema({
   username: String,
   password: String,
+  admin: Boolean,
   createdAt: {
     type: Date,
     default: moment().valueOf(),

@@ -4,9 +4,12 @@
   <h4>{{this.headline}}</h4>
   <p>{{prettyDate this.createdAt}}</p>
   <a href="/blog/{{this.permalink}}">View</a>
+  {{#if ../isAdmin}}
+    | <a href="/blog/edit/{{this._id}}">Edit</a> |
+    <a href="/blog/delete/{{this._id}}">Delete</a>
+  {{/if}}
   <hr>  
 {{/each}}
-{{isAdmin}}
 {{#if isAdmin}}
   <a class="btn-primary btn" href="/blog/new">Create a new Post</a>
 {{/if}}

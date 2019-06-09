@@ -6,6 +6,7 @@ const { Schema } = mongoose;
 const postSchema = new Schema({
   headline: String,
   subHeadline: String,
+  author: String,
   body: String,
   permalink: {
     type: String,

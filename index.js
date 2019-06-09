@@ -29,6 +29,20 @@ passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
+app.use(express.static(`${__dirname}/dist`));
+app.use(cookieParser());
+app.use(bodyParser.json()); // support json encoded bodies
+app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
+app.use(session({
+  secret: 'keyboard cat',
+  resave: 'true',
+  saveUninitialized: true,
+  cookie: { maxAge: 60000 },
+  store: sessionStore,
+}));
+app.use(passport.initialize());
+app.use(passport.session());
+
 app.engine('hbs', hbs.express4({
   partialsDir: [relative('views/partials')],
   layoutsDir: relative('views/layouts'),
@@ -39,29 +53,14 @@ app.engine('hbs', hbs.express4({
 app.set('view engine', 'hbs');
 app.set('views', `${__dirname}/views`);
 
-app.use(bodyParser.json()); // support json encoded bodies
-app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
-
 // app.use('/static', express.static(path.join(__dirname, 'dist')));
-app.use(express.static(`${__dirname}/dist`));
 
-app.use(cookieParser('keyboard cat'));
-app.use(session({
-  secret: 'keyboard cat',
-  resave: 'true',
-  saveUninitialized: true,
-  cookie: { maxAge: 60000 },
-  store: sessionStore,
-}));
 app.use(flash());
 app.use((req, res, next) => {
   res.locals.flashMessage = req.session.flashMessage;
   delete req.session.flashMessage;
   next();
 });
-
-app.use(passport.initialize());
-app.use(passport.session());
 
 app.use(postController);
 app.use(userController);
