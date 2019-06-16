@@ -23,7 +23,7 @@ function relative(fp) {
   return path.join(__dirname, fp);
 }
 
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
